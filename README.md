@@ -9,7 +9,7 @@ JAR Classes Version Detector
 ## Example
 `python jar_classes_version_detector.py https://repo1.maven.org/maven2/junit/junit/4.12/junit-4.12.jar`
 
-## Output
+### Output
 ```
 Downloading: 'https://repo1.maven.org/maven2/junit/junit/4.12/junit-4.12.jar'...
 Download completed, created temporary file: 'C:\Users\Alberto\AppData\Local\Temp\tmp7khyolmj'.
