@@ -43,14 +43,17 @@ def analyze_classes(jarfile):
 
 def print_results(results):
     print()
-    for version, classes in sorted(results.items(), reverse=True):
-        fullver = ".".join(str(e) for e in version)
-        javaver = "1." + str(version[0] - 44) if version[0] < 49 else str(version[0] - 44)
-        result = f">>> Version {fullver} (Java {javaver}) => {len(classes)} classes found: "
-        classnames = functools.reduce(lambda a, b: a + ", " + b, sorted(classes))
-        result += classnames[:1000] + '...' if len(classnames) > 1000 else classnames
-        result += " <<<"
-        print(result)
+    if len(results) > 0:
+        for version, classes in sorted(results.items(), reverse=True):
+            fullver = ".".join(str(e) for e in version)
+            javaver = "1." + str(version[0] - 44) if version[0] < 49 else str(version[0] - 44)
+            result = f">>> Version {fullver} (Java {javaver}) => {len(classes)} classes found: "
+            classnames = functools.reduce(lambda a, b: a + ", " + b, sorted(classes))
+            result += classnames[:1000] + '...' if len(classnames) > 1000 else classnames
+            result += " <<<"
+            print(result)
+    else:
+        print("No Java class found.")
     print()
 
 
