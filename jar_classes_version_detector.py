@@ -9,14 +9,7 @@ import urllib.request as urllib2
 
 proxies = {}
 
-args = [
-    """
-https://repo1.maven.org/maven2/org/springframework/spring-core/5.2.0.RELEASE/spring-core-5.2.0.RELEASE.jar
-    """,
-    """
-https://repo1.maven.org/maven2/org/springframework/spring-context/5.2.0.RELEASE/spring-context-5.2.0.RELEASE.jar
-    """
-]
+args = []
 
 SCREEN_WIDTH = 70
 
