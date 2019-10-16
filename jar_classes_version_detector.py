@@ -1,11 +1,11 @@
 import functools
 import logging
 import math
-import os 
+import os
 import sys
 import zipfile
 
-import urllib.request as urllib2 
+import urllib.request as urllib2
 
 proxies = {}
 
@@ -33,7 +33,7 @@ def analyze_classes(jarfile):
         minver = int.from_bytes(classbytes[4:6], "big")
         majver = int.from_bytes(classbytes[6:8], "big")
         classes = results.get((majver, minver))
-        if classes == None:
+        if classes is None:
             classes = list()
             results[(majver, minver)] = classes
         classes.append(classname)
