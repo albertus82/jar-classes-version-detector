@@ -3,13 +3,13 @@ JAR Classes Version Detector
 
 [![Build status](https://github.com/albertus82/jar_classes_version_detector/workflows/build/badge.svg)](https://github.com/albertus82/jar_classes_version_detector/actions)
 
-### Usage
+## Usage
 `python jar_classes_version_detector.py /path/to/library.jar [http://example.com/another.jar ...]`
 
-### Example
+## Example
 `python jar_classes_version_detector.py https://repo1.maven.org/maven2/junit/junit/4.12/junit-4.12.jar`
 
-#### Output:
+## Output
 ```
 Downloading: 'https://repo1.maven.org/maven2/junit/junit/4.12/junit-4.12.jar'...
 Download completed, created temporary file: 'C:\Users\Alberto\AppData\Local\Temp\tmp7khyolmj'.
