@@ -22,4 +22,4 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        SONAR_SCANNER_OPTS: -Dsonar.sources=. -Dsonar.organization=albertus82-github -Dsonar.projectKey=it.albertus:jar_classes_version_detector
+        SONAR_SCANNER_OPTS: -Dsonar.sources=. -Dsonar.organization=albertus82-github -Dsonar.projectKey=it.albertus:jar-classes-version-detector
