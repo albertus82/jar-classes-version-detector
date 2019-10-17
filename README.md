@@ -1,7 +1,7 @@
 JAR Classes Version Detector
 ============================
 
-[![Build status](https://github.com/albertus82/jar_classes_version_detector/workflows/build/badge.svg)](https://github.com/albertus82/jar_classes_version_detector/actions)
+[![Build status](https://github.com/albertus82/jar-classes-version-detector/workflows/build/badge.svg)](https://github.com/albertus82/jar-classes-version-detector/actions)
 
 ## Usage
 `python jarver.py /path/to/library.jar [http://example.com/another.jar ...]`
@@ -12,7 +12,7 @@ JAR Classes Version Detector
 ### Output
 ```
 Downloading: 'https://repo1.maven.org/maven2/junit/junit/4.12/junit-4.12.jar'...
-Download completed, created temporary file: 'C:\Users\Alberto\AppData\Local\Temp\tmp7khyolmj'.
+Download completed, created temporary file: '/tmp/tmpreoqcoe0'.
 Analyzing: 'junit-4.12.jar'...
 
 ------------------------ META-INF/MANIFEST.MF ------------------------
