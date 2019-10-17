@@ -66,13 +66,11 @@ def print_separator():
     print()
 
 
-if __name__ == "__main__":
-    if len(sys.argv) > 1:
-        args = sys.argv[1:]
-    if len(args) < 1:
+def main(argv):
+    if len(argv) < 1:
         print("E: At least one file name or URL must be provided via command line or 'args' list.")
     try:
-        for idx, arg in enumerate(e.strip() for e in args):
+        for idx, arg in enumerate(e.strip() for e in argv):
             if arg.startswith("http:") or arg.startswith("https:"):
                 if len(proxies) > 0:
                     proxy = urllib2.ProxyHandler(proxies)
@@ -96,8 +94,12 @@ if __name__ == "__main__":
                 results = analyze_classes(jarfile)
                 print_results(results)
             print(f"Analysis of '{jarfilename}' completed.")
-            if idx + 1 < len(args):
+            if idx + 1 < len(argv):
                 print_separator()
     finally:
         logging.info("Cleaning up temporary files...")
         urllib2.urlcleanup()
+
+
+if __name__ == "__main__":
+    main(sys.argv[1:] if len(sys.argv) > 1 else args)
