@@ -7,11 +7,14 @@ import zipfile
 
 import urllib.request as urllib2
 
-proxies = {}
+SCREEN_WIDTH = 70
+
+proxies = {
+    # "http": "http://username:password@address:port",
+    # "https": "http://username:password@address:port"
+}
 
 args = []
-
-SCREEN_WIDTH = 70
 
 
 def print_manifest(jarfile):
