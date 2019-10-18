@@ -3,6 +3,9 @@ JAR Classes Version Detector
 
 [![Build status](https://github.com/albertus82/jar-classes-version-detector/workflows/build/badge.svg)](https://github.com/albertus82/jar-classes-version-detector/actions)
 
+## Requirements
+**[Python](https://www.python.org/) 3.6+**
+
 ## Usage
 `python jarver.py /path/to/library.jar [http://example.com/another.jar ...]`
 
