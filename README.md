@@ -2,6 +2,7 @@ JAR Classes Version Detector
 ============================
 
 [![Build status](https://github.com/albertus82/jar-classes-version-detector/workflows/build/badge.svg)](https://github.com/albertus82/jar-classes-version-detector/actions)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=it.albertus%3Ajar-classes-version-detector&metric=alert_status)](https://sonarcloud.io/dashboard?id=it.albertus%3Ajar-classes-version-detector)
 
 ## Requirements
 **[Python](https://www.python.org/) 3.6+**
