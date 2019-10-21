@@ -8,7 +8,7 @@ JAR Classes Version Detector
 **[Python](https://www.python.org/) 3.6+**
 
 ## Usage
-`python jarver.py /path/to/library.jar [http://example.com/another.jar ...]`
+`python jarver.py /path/to/library.jar [http://example.com/another.jar .. /path/to/last.jar]`
 
 ## Example
 `python jarver.py https://repo1.maven.org/maven2/junit/junit/4.12/junit-4.12.jar`
