@@ -21,7 +21,9 @@ def print_manifest(jarfile):
     filename = "META-INF/MANIFEST.MF"
     if filename.upper() in (e.upper() for e in jarfile.namelist()):
         print()
-        print("".join("-" for _ in range(math.floor(SCREEN_WIDTH / 2 - (len(filename) + 2) / 2))), filename, "".join("-" for _ in range(math.ceil(SCREEN_WIDTH / 2 - (len(filename) + 2) / 2))))
+        print("".join("-" for _ in range(math.floor(SCREEN_WIDTH / 2 - (len(filename) + 2) / 2))), end=" ")
+        print(filename, end=" ")
+        print("".join("-" for _ in range(math.ceil(SCREEN_WIDTH / 2 - (len(filename) + 2) / 2))))
         print(jarfile.read(filename).decode("UTF-8").replace("\r\n", "\n").strip())
         print("".join("-" for _ in range(SCREEN_WIDTH)))
 
