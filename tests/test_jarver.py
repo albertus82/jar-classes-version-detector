@@ -28,7 +28,12 @@ class TestJarver(unittest.TestCase):
             })
 
     def test_main(self):
-        self.assertIsNone(jarver.main([os.path.join(TESTS_DIR, "dummy.jar"), os.path.join(TESTS_DIR, "bad.jar"), os.path.join(TESTS_DIR, "fat.jar"), "https://repo1.maven.org/maven2/junit/junit/4.12/junit-4.12.jar"]))
+        self.assertIsNone(jarver.main([
+            os.path.join(TESTS_DIR, "dummy.jar"),
+            os.path.join(TESTS_DIR, "bad.jar"),
+            os.path.join(TESTS_DIR, "fat.jar"),
+            "https://repo1.maven.org/maven2/junit/junit/4.12/junit-4.12.jar"
+        ]))
 
 
 if __name__ == '__main__':

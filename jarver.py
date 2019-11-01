@@ -69,9 +69,10 @@ def analyze_contents(archive):
         logging.debug("%d.%d %s", majver, minver, classname)
 
     # Check for nested archives (EAR/fat JAR)
-    for nested in sorted(filter(lambda a:
-            a.endswith(".jar") or a.endswith(".war") or a.endswith(".ear") or a.endswith(".rar"),
-            map(lambda b: b.lower(), archive.namelist()))):
+    for nested in sorted(filter(
+            lambda a: a.endswith(".jar") or a.endswith(".war") or a.endswith(".ear") or a.endswith(".rar"),
+            map(lambda b: b.lower(), archive.namelist())
+        )):
         print()
         print(f"Detected nested archive: '{nested}'")
         analyze_file(archive.open(nested), nested)
