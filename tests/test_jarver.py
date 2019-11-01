@@ -28,7 +28,7 @@ class TestJarver(unittest.TestCase):
             })
 
     def test_main(self):
-        self.assertIsNone(jarver.main([os.path.join(TESTS_DIR, "dummy.jar")]))
+        self.assertIsNone(jarver.main([os.path.join(TESTS_DIR, "bad.jar"), os.path.join(TESTS_DIR, "dummy.jar")]))
 
 
 if __name__ == '__main__':
