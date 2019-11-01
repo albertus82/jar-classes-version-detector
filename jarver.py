@@ -9,8 +9,6 @@ import urllib.request as urllib2
 
 SCREEN_WIDTH = 70
 
-INDENT = ""
-
 proxies = {
     # "http": "http://username:password@address:port",
     # "https": "http://username:password@address:port"
@@ -46,26 +44,23 @@ def analyze_file(file, display_name):
     if not zipfile.is_zipfile(file):
         print(f"Warning! Skipping file '{file}' because it does not exist or is not a valid ZIP archive.")
     else:
-        print(f"Analyzing: '{display_name}'...")
+        print(f"Analyzing archive: '{display_name}'...")
         with zipfile.ZipFile(file) as archive:
             print_manifest(archive)
             results = analyze_contents(archive)
             print_results(results)
-        print(f"Analysis of '{display_name}' completed.")
+        print(f"Analysis of archive '{display_name}' completed.")
 
 
 def analyze_nested_file(file, display_name, level):
     print()
     if not zipfile.is_zipfile(file):
-        print(INDENT * level, end="")
-        print(f"Warning: Skipping nested file '{display_name}' (level {level}) because it is not a valid ZIP archive.")
+        print(f"Warning! Skipping nested file '{display_name}' (level {level}) because it is not a valid ZIP archive.")
     else:
-        print(INDENT * level, end="")
         print(f"Analyzing nested archive: '{display_name}' (level {level})...")
         with zipfile.ZipFile(file) as archive:
             results = analyze_contents(archive, level)
-            print_nested_results(results, level)
-        print(INDENT * level, end="")
+            print_results(results)
         print(f"Analysis of nested archive '{display_name}' (level {level}) completed.")
 
 
@@ -110,22 +105,6 @@ def print_results(results):
             result += " <<<"
             print(result)
     else:
-        print("No Java class found.")
-    print()
-
-
-def print_nested_results(results, level):
-    print()
-    if len(results) > 0:
-        for version, classes in sorted(results.items(), reverse=True):
-            fullver = ".".join(str(e) for e in version)
-            javaver = "1." + str(version[0] - 44) if version[0] < 49 else str(version[0] - 44)
-            classes_count = len(classes)
-            result = f">>> Version {fullver} (Java {javaver}) => {classes_count} {'class' if classes_count == 1 else 'classes'} found <<<"
-            print(INDENT * level, end="")
-            print(result)
-    else:
-        print(INDENT * level, end="")
         print("No Java class found.")
     print()
 
