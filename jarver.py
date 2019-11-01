@@ -14,7 +14,7 @@ proxies = {
     # "https": "http://username:password@address:port"
 }
 
-args = []
+args = ['tests/fat.jar']
 
 
 def print_manifest(jarfile):
@@ -27,6 +27,14 @@ def print_manifest(jarfile):
         print(jarfile.read(filename).decode("UTF-8").replace("\r\n", "\n").strip())
         print("".join("-" for _ in range(SCREEN_WIDTH)))
 
+
+def analyze_file(seekable, filename):
+    print(f"Analyzing: '{filename}'...")
+    with zipfile.ZipFile(seekable) as jarfile:
+        print_manifest(jarfile)
+        results = analyze_classes(jarfile)
+        print_results(results)
+    print(f"Analysis of '{filename}' completed.")
 
 def analyze_classes(jarfile):
     results = {}
@@ -43,6 +51,14 @@ def analyze_classes(jarfile):
             results[(majver, minver)] = classes
         classes.append(classname)
         logging.debug("%d.%d %s", majver, minver, classname)
+
+    # Check for nested JARs (fat JAR)
+    for nested_jar in sorted(filter(lambda a: 
+            a.endswith(".jar") or a.endswith(".war") or a.endswith(".ear") or a.endswith(".rar"),
+            map(lambda b: b.lower(), jarfile.namelist()))):
+        print(f"\nProcessing nested archive: '{nested_jar}'")
+        analyze_file(jarfile.open(nested_jar), nested_jar)
+
     return results
 
 
@@ -68,36 +84,37 @@ def print_separator():
     print()
 
 
+
+def process_arg(argv, idx):
+    arg = argv[idx].strip()
+    if arg.startswith("http:") or arg.startswith("https:"):
+        if len(proxies) > 0:
+            proxy = urllib2.ProxyHandler(proxies)
+            auth = urllib2.HTTPBasicAuthHandler()
+            opener = urllib2.build_opener(proxy, auth, urllib2.HTTPHandler)
+            urllib2.install_opener(opener)
+        print(f"Downloading: '{arg}'...")
+        file = urllib2.urlretrieve(arg)[0]
+        print(f"Download completed, created temporary file: '{file}'.")
+        jarfilename = arg[arg.rindex("/") + 1:]
+    else:
+        print(f"Opening: '{arg}'...")
+        file = arg
+        jarfilename = os.path.basename(file)
+    if not zipfile.is_zipfile(file):
+        print(f"W: Skipping file '{file}' because it does not exist or is not a valid ZIP file.")
+        return
+    analyze_file(file, jarfilename)
+    if idx + 1 < len(argv):
+        print_separator()
+
+
 def main(argv):
     if len(argv) < 1:
         print("E: At least one file name or URL must be provided via command line or 'args' list.")
     try:
-        for idx, arg in enumerate(e.strip() for e in argv):
-            if arg.startswith("http:") or arg.startswith("https:"):
-                if len(proxies) > 0:
-                    proxy = urllib2.ProxyHandler(proxies)
-                    auth = urllib2.HTTPBasicAuthHandler()
-                    opener = urllib2.build_opener(proxy, auth, urllib2.HTTPHandler)
-                    urllib2.install_opener(opener)
-                print(f"Downloading: '{arg}'...")
-                file = urllib2.urlretrieve(arg)[0]
-                print(f"Download completed, created temporary file: '{file}'.")
-                jarfilename = arg[arg.rindex("/") + 1:]
-            else:
-                print(f"Opening: '{arg}'...")
-                file = arg
-                jarfilename = os.path.basename(file)
-            if not zipfile.is_zipfile(file):
-                print(f"W: Skipping file '{file}' because it does not exist or is not a valid ZIP file.")
-                continue
-            print(f"Analyzing: '{jarfilename}'...")
-            with zipfile.ZipFile(file) as jarfile:
-                print_manifest(jarfile)
-                results = analyze_classes(jarfile)
-                print_results(results)
-            print(f"Analysis of '{jarfilename}' completed.")
-            if idx + 1 < len(argv):
-                print_separator()
+        for idx in range(len(argv)):
+            process_arg(argv, idx);
     finally:
         logging.info("Cleaning up temporary files...")
         urllib2.urlcleanup()
