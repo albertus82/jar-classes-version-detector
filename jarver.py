@@ -88,7 +88,7 @@ def analyze_contents(archive, level=0):
             e.lower().endswith(".war") or
             e.lower().endswith(".ear") or
             e.lower().endswith(".rar")
-        )):
+    )):
         analyze_nested_file(archive.open(nested), nested, level + 1)
 
     return results
@@ -104,7 +104,8 @@ def print_results(results, level=0):
             fullver = ".".join(str(e) for e in version)
             javaver = "1." + str(version[0] - 44) if version[0] < 49 else str(version[0] - 44)
             classes_count = len(classes)
-            result = f">>> Version {fullver} (Java {javaver}) => {classes_count} {'class' if classes_count == 1 else 'classes'} found: "
+            result = f">>> Version {fullver} (Java {javaver}) => "
+            result += f"{classes_count} {'class' if classes_count == 1 else 'classes'} found: "
             result += functools.reduce(lambda a, b: a + ", " + b, sorted(classes))
             if len(result) >= max_line_length - len(TERMINATOR):
                 result = result[:max_line_length - len(TERMINATOR) - len(ELLIPSIS)] + ELLIPSIS
