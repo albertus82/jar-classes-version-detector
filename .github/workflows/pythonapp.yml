@@ -20,7 +20,7 @@ jobs:
     - run: flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - run: coverage run -m unittest discover tests
     - run: coverage xml
-    - if: matrix.os == 'ubuntu-latest' && matrix.python == '3.7'
+    - if: matrix.os == 'ubuntu-latest' && matrix.python == '3.8'
       uses: sonarsource/sonarcloud-github-action@master
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
