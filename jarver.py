@@ -9,6 +9,8 @@ import urllib.request as urllib2
 
 SCREEN_WIDTH = 70
 
+MAX_LINE_LENGTH = 1000
+
 proxies = {
     # "http": "http://username:password@address:port",
     # "https": "http://username:password@address:port"
@@ -95,14 +97,17 @@ def analyze_contents(archive, level=0):
 def print_results(results):
     print()
     if len(results) > 0:
+        ELLIPSIS = "..."
+        TERMINATOR = " <<<"
         for version, classes in sorted(results.items(), reverse=True):
             fullver = ".".join(str(e) for e in version)
             javaver = "1." + str(version[0] - 44) if version[0] < 49 else str(version[0] - 44)
             classes_count = len(classes)
             result = f">>> Version {fullver} (Java {javaver}) => {classes_count} {'class' if classes_count == 1 else 'classes'} found: "
-            classnames = functools.reduce(lambda a, b: a + ", " + b, sorted(classes))
-            result += classnames[:1000] + '...' if len(classnames) > 1000 else classnames
-            result += " <<<"
+            result += functools.reduce(lambda a, b: a + ", " + b, sorted(classes))
+            if len(result) >= MAX_LINE_LENGTH - len(TERMINATOR):
+                result = result[:MAX_LINE_LENGTH - len(TERMINATOR) - len(ELLIPSIS)] + ELLIPSIS
+            result += TERMINATOR
             print(result)
     else:
         print("No Java class found.")
