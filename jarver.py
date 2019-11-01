@@ -9,7 +9,7 @@ import urllib.request as urllib2
 
 SCREEN_WIDTH = 70
 
-MAX_LINE_LENGTH = 1000
+MAX_RESULT_LENGTH = 1000
 
 proxies = {
     # "http": "http://username:password@address:port",
@@ -99,7 +99,7 @@ def print_results(results, level=0):
     if len(results) > 0:
         ELLIPSIS = "..."
         TERMINATOR = " <<<"
-        max_line_length = MAX_LINE_LENGTH if level == 0 else SCREEN_WIDTH
+        max_line_length = MAX_RESULT_LENGTH if level == 0 else SCREEN_WIDTH
         for version, classes in sorted(results.items(), reverse=True):
             fullver = ".".join(str(e) for e in version)
             javaver = "1." + str(version[0] - 44) if version[0] < 49 else str(version[0] - 44)
