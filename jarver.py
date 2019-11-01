@@ -28,13 +28,28 @@ def print_manifest(jarfile):
         print("".join("-" for _ in range(SCREEN_WIDTH)))
 
 
+def download(arg):
+    if len(proxies) > 0:
+        proxy = urllib2.ProxyHandler(proxies)
+        auth = urllib2.HTTPBasicAuthHandler()
+        opener = urllib2.build_opener(proxy, auth, urllib2.HTTPHandler)
+        urllib2.install_opener(opener)
+    print(f"Downloading: '{arg}'...")
+    file = urllib2.urlretrieve(arg)[0]
+    print(f"Download completed, created temporary file: '{file}'.")
+    return file
+
+
 def analyze_file(file, display_name):
-    print(f"Analyzing: '{display_name}'...")
-    with zipfile.ZipFile(file) as archive:
-        print_manifest(archive)
-        results = analyze_contents(archive)
-        print_results(results)
-    print(f"Analysis of '{display_name}' completed.")
+    if not zipfile.is_zipfile(file):
+        print(f"Warning: Skipping file '{file}' because it does not exist or is not a valid ZIP file.")
+    else:
+        print(f"Analyzing: '{display_name}'...")
+        with zipfile.ZipFile(file) as archive:
+            print_manifest(archive)
+            results = analyze_contents(archive)
+            print_results(results)
+        print(f"Analysis of '{display_name}' completed.")
 
 
 def analyze_contents(archive):
@@ -54,7 +69,7 @@ def analyze_contents(archive):
         logging.debug("%d.%d %s", majver, minver, classname)
 
     # Check for nested archives (EAR/fat JAR)
-    for nested in sorted(filter(lambda a: 
+    for nested in sorted(filter(lambda a:
             a.endswith(".jar") or a.endswith(".war") or a.endswith(".ear") or a.endswith(".rar"),
             map(lambda b: b.lower(), archive.namelist()))):
         print()
@@ -89,23 +104,13 @@ def print_separator():
 def process_arg(argv, idx):
     arg = argv[idx].strip()
     if arg.startswith("http:") or arg.startswith("https:"):
-        if len(proxies) > 0:
-            proxy = urllib2.ProxyHandler(proxies)
-            auth = urllib2.HTTPBasicAuthHandler()
-            opener = urllib2.build_opener(proxy, auth, urllib2.HTTPHandler)
-            urllib2.install_opener(opener)
-        print(f"Downloading: '{arg}'...")
-        file = urllib2.urlretrieve(arg)[0]
-        print(f"Download completed, created temporary file: '{file}'.")
+        file = download(arg)
         display_name = arg[arg.rindex("/") + 1:]
     else:
         print(f"Opening: '{arg}'...")
         file = arg
         display_name = os.path.basename(file)
-    if not zipfile.is_zipfile(file):
-        print(f"Warning: Skipping file '{file}' because it does not exist or is not a valid ZIP file.")
-    else:
-        analyze_file(file, display_name)
+    analyze_file(file, display_name)
     if idx + 1 < len(argv):
         print_separator()
 
