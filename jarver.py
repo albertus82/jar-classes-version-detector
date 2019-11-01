@@ -9,6 +9,8 @@ import urllib.request as urllib2
 
 SCREEN_WIDTH = 70
 
+INDENT = ""
+
 proxies = {
     # "http": "http://username:password@address:port",
     # "https": "http://username:password@address:port"
@@ -52,19 +54,22 @@ def analyze_file(file, display_name):
         print(f"Analysis of '{display_name}' completed.")
 
 
-def analyze_nested_file(file, display_name):
+def analyze_nested_file(file, display_name, level):
     print()
     if not zipfile.is_zipfile(file):
-        print(f"Warning: Skipping nested file '{display_name}' because it is not a valid ZIP archive.")
+        print(INDENT * level, end="")
+        print(f"Warning: Skipping nested file '{display_name}' (level {level}) because it is not a valid ZIP archive.")
     else:
-        print(f"Analyzing nested archive: '{display_name}'...")
+        print(INDENT * level, end="")
+        print(f"Analyzing nested archive: '{display_name}' (level {level})...")
         with zipfile.ZipFile(file) as archive:
-            results = analyze_contents(archive)
-            print_results(results)
-        print(f"Analysis of nested archive '{display_name}' completed.")
+            results = analyze_contents(archive, level)
+            print_nested_results(results, level)
+        print(INDENT * level, end="")
+        print(f"Analysis of nested archive '{display_name}' (level {level}) completed.")
 
 
-def analyze_contents(archive):
+def analyze_contents(archive, level=0):
     results = {}
     for classname in (e for e in archive.namelist() if e.lower().endswith(".class")):
         classbytes = archive.read(classname)
@@ -87,7 +92,7 @@ def analyze_contents(archive):
             e.lower().endswith(".ear") or
             e.lower().endswith(".rar")
         )):
-        analyze_nested_file(archive.open(nested), nested)
+        analyze_nested_file(archive.open(nested), nested, level + 1)
 
     return results
 
@@ -98,12 +103,29 @@ def print_results(results):
         for version, classes in sorted(results.items(), reverse=True):
             fullver = ".".join(str(e) for e in version)
             javaver = "1." + str(version[0] - 44) if version[0] < 49 else str(version[0] - 44)
-            result = f">>> Version {fullver} (Java {javaver}) => {len(classes)} classes found: "
+            classes_count = len(classes)
+            result = f">>> Version {fullver} (Java {javaver}) => {classes_count} {'class' if classes_count == 1 else 'classes'} found: "
             classnames = functools.reduce(lambda a, b: a + ", " + b, sorted(classes))
             result += classnames[:1000] + '...' if len(classnames) > 1000 else classnames
             result += " <<<"
             print(result)
     else:
+        print("No Java class found.")
+    print()
+
+
+def print_nested_results(results, level):
+    print()
+    if len(results) > 0:
+        for version, classes in sorted(results.items(), reverse=True):
+            fullver = ".".join(str(e) for e in version)
+            javaver = "1." + str(version[0] - 44) if version[0] < 49 else str(version[0] - 44)
+            classes_count = len(classes)
+            result = f">>> Version {fullver} (Java {javaver}) => {classes_count} {'class' if classes_count == 1 else 'classes'} found <<<"
+            print(INDENT * level, end="")
+            print(result)
+    else:
+        print(INDENT * level, end="")
         print("No Java class found.")
     print()
 
