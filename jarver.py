@@ -17,14 +17,14 @@ proxies = {
 args = []
 
 
-def print_manifest(jarfile):
+def print_manifest(archive):
     filename = "META-INF/MANIFEST.MF"
-    if filename.upper() in (e.upper() for e in jarfile.namelist()):
+    if filename.upper() in (e.upper() for e in archive.namelist()):
         print()
         print("".join("-" for _ in range(math.floor(SCREEN_WIDTH / 2 - (len(filename) + 2) / 2))), end=" ")
         print(filename, end=" ")
         print("".join("-" for _ in range(math.ceil(SCREEN_WIDTH / 2 - (len(filename) + 2) / 2))))
-        print(jarfile.read(filename).decode("UTF-8").replace("\r\n", "\n").strip())
+        print(archive.read(filename).decode("UTF-8").replace("\r\n", "\n").strip())
         print("".join("-" for _ in range(SCREEN_WIDTH)))
 
 
@@ -40,13 +40,14 @@ def download(arg):
     return file
 
 
-def analyze_file(file, display_name):
+def analyze_file(file, display_name, manifest=False):
     if not zipfile.is_zipfile(file):
         print(f"Warning: Skipping file '{file}' because it does not exist or is not a valid ZIP file.")
     else:
         print(f"Analyzing: '{display_name}'...")
         with zipfile.ZipFile(file) as archive:
-            print_manifest(archive)
+            if manifest:
+                print_manifest(archive)
             results = analyze_contents(archive)
             print_results(results)
         print(f"Analysis of '{display_name}' completed.")
@@ -113,7 +114,7 @@ def process_arg(argv, idx):
         print(f"Opening: '{arg}'...")
         file = arg
         display_name = os.path.basename(file)
-    analyze_file(file, display_name)
+    analyze_file(file, display_name, manifest=True)
     if idx + 1 < len(argv):
         print_separator()
 
