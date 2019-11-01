@@ -40,17 +40,28 @@ def download(arg):
     return file
 
 
-def analyze_file(file, display_name, manifest=False):
+def analyze_file(file, display_name):
     if not zipfile.is_zipfile(file):
-        print(f"Warning: Skipping file '{file}' because it does not exist or is not a valid ZIP file.")
+        print(f"Warning! Skipping file '{file}' because it does not exist or is not a valid ZIP archive.")
     else:
         print(f"Analyzing: '{display_name}'...")
         with zipfile.ZipFile(file) as archive:
-            if manifest:
-                print_manifest(archive)
+            print_manifest(archive)
             results = analyze_contents(archive)
             print_results(results)
         print(f"Analysis of '{display_name}' completed.")
+
+
+def analyze_nested_file(file, display_name):
+    print()
+    if not zipfile.is_zipfile(file):
+        print(f"Warning: Skipping nested file '{display_name}' because it is not a valid ZIP archive.")
+    else:
+        print(f"Analyzing nested archive: '{display_name}'...")
+        with zipfile.ZipFile(file) as archive:
+            results = analyze_contents(archive)
+            print_results(results)
+        print(f"Analysis of nested archive '{display_name}' completed.")
 
 
 def analyze_contents(archive):
@@ -58,7 +69,7 @@ def analyze_contents(archive):
     for classname in (e for e in archive.namelist() if e.lower().endswith(".class")):
         classbytes = archive.read(classname)
         if classbytes[0:4] != b"\xCA\xFE\xBA\xBE":  # Magic word
-            print(f"W: Skipping '{classname}' because it isn't a valid Java class file.")
+            print(f"Warning! Skipping '{classname}' because it isn't a valid Java class file.")
             continue
         minver = int.from_bytes(classbytes[4:6], "big")
         majver = int.from_bytes(classbytes[6:8], "big")
@@ -76,9 +87,7 @@ def analyze_contents(archive):
             e.lower().endswith(".ear") or
             e.lower().endswith(".rar")
         )):
-        print()
-        print(f"Detected nested archive: '{nested}'")
-        analyze_file(archive.open(nested), nested)
+        analyze_nested_file(archive.open(nested), nested)
 
     return results
 
@@ -114,14 +123,14 @@ def process_arg(argv, idx):
         print(f"Opening: '{arg}'...")
         file = arg
         display_name = os.path.basename(file)
-    analyze_file(file, display_name, manifest=True)
+    analyze_file(file, display_name)
     if idx + 1 < len(argv):
         print_separator()
 
 
 def main(argv):
     if len(argv) < 1:
-        print("Error: At least one file name or URL must be provided via command line or 'args' list.")
+        print("Error! At least one file name or URL must be provided via command line or 'args' list.")
     try:
         for idx in range(len(argv)):
             process_arg(argv, idx)
