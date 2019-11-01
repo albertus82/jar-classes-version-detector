@@ -30,17 +30,17 @@ def print_manifest(jarfile):
 
 def analyze_file(file, display_name):
     print(f"Analyzing: '{display_name}'...")
-    with zipfile.ZipFile(file) as jarfile:
-        print_manifest(jarfile)
-        results = analyze_classes(jarfile)
+    with zipfile.ZipFile(file) as archive:
+        print_manifest(archive)
+        results = analyze_contents(archive)
         print_results(results)
     print(f"Analysis of '{display_name}' completed.")
 
 
-def analyze_classes(jarfile):
+def analyze_contents(archive):
     results = {}
-    for classname in (e for e in jarfile.namelist() if e.lower().endswith(".class")):
-        classbytes = jarfile.read(classname)
+    for classname in (e for e in archive.namelist() if e.lower().endswith(".class")):
+        classbytes = archive.read(classname)
         if classbytes[0:4] != b"\xCA\xFE\xBA\xBE":  # Magic word
             print(f"W: Skipping '{classname}' because it isn't a valid Java class file.")
             continue
@@ -56,10 +56,10 @@ def analyze_classes(jarfile):
     # Check for nested archives (EAR/fat JAR)
     for nested in sorted(filter(lambda a: 
             a.endswith(".jar") or a.endswith(".war") or a.endswith(".ear") or a.endswith(".rar"),
-            map(lambda b: b.lower(), jarfile.namelist()))):
+            map(lambda b: b.lower(), archive.namelist()))):
         print()
         print(f"Detected nested archive: '{nested}'")
-        analyze_file(jarfile.open(nested), nested)
+        analyze_file(archive.open(nested), nested)
 
     return results
 

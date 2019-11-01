@@ -9,9 +9,9 @@ TESTS_DIR = os.path.dirname(__file__)
 
 class TestJarver(unittest.TestCase):
 
-    def test_analyze_classes(self):
+    def test_analyze_contents(self):
         with zipfile.ZipFile(os.path.join(TESTS_DIR, "dummy.jar")) as file:
-            self.assertEqual(jarver.analyze_classes(file), {
+            self.assertEqual(jarver.analyze_contents(file), {
                 (57, 0): ["DummyClass13.class"],
                 (56, 0): ["DummyClass12.class"],
                 (55, 0): ["DummyClass11.class"],
