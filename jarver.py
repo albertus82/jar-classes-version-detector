@@ -62,7 +62,7 @@ def analyze_nested_file(file, display_name, level):
         print(f"Analyzing nested archive: '{display_name}' (level {level})...")
         with zipfile.ZipFile(file) as archive:
             results = analyze_contents(archive, level)
-            print_results(results)
+            print_results(results, level)
         print(f"Analysis of nested archive '{display_name}' (level {level}) completed.")
 
 
@@ -94,19 +94,20 @@ def analyze_contents(archive, level=0):
     return results
 
 
-def print_results(results):
+def print_results(results, level=0):
     print()
     if len(results) > 0:
         ELLIPSIS = "..."
         TERMINATOR = " <<<"
+        max_line_length = MAX_LINE_LENGTH if level == 0 else SCREEN_WIDTH
         for version, classes in sorted(results.items(), reverse=True):
             fullver = ".".join(str(e) for e in version)
             javaver = "1." + str(version[0] - 44) if version[0] < 49 else str(version[0] - 44)
             classes_count = len(classes)
             result = f">>> Version {fullver} (Java {javaver}) => {classes_count} {'class' if classes_count == 1 else 'classes'} found: "
             result += functools.reduce(lambda a, b: a + ", " + b, sorted(classes))
-            if len(result) >= MAX_LINE_LENGTH - len(TERMINATOR):
-                result = result[:MAX_LINE_LENGTH - len(TERMINATOR) - len(ELLIPSIS)] + ELLIPSIS
+            if len(result) >= max_line_length - len(TERMINATOR):
+                result = result[:max_line_length - len(TERMINATOR) - len(ELLIPSIS)] + ELLIPSIS
             result += TERMINATOR
             print(result)
     else:
