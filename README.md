@@ -5,7 +5,7 @@ JAR Classes Version Detector
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=it.albertus%3Ajar-classes-version-detector&metric=alert_status)](https://sonarcloud.io/dashboard?id=it.albertus%3Ajar-classes-version-detector)
 
 ## Requirements
-**[Python](https://www.python.org/) 3.6+**
+**[Python](https://www.python.org/) 3.7+**
 
 ## Usage
 `python jarver.py /path/to/library.jar [http://example.com/another.jar .. /path/to/last.jar]`
