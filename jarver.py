@@ -57,7 +57,7 @@ def analyze_file(file, display_name):
 
 def analyze_nested_file(file, display_name, level):
     if not file.seekable():  # Only to ensure compatibility with Python <3.7
-        file = io.BytesIO(file.read()) 
+        file = io.BytesIO(file.read())
     print()
     if not zipfile.is_zipfile(file):
         print(f"Warning! Skipping nested file '{display_name}' (level {level}) because it is not a valid ZIP archive.")
