@@ -25,4 +25,4 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        SONAR_SCANNER_OPTS: -Dsonar.sources=. -Dsonar.tests=tests -Dsonar.exclusions=tests/** -Dsonar.python.coverage.reportPaths=coverage.xml -Dsonar.sourceEncoding=UTF-8 -Dsonar.organization=albertus82-github -Dsonar.projectKey=it.albertus:jar-classes-version-detector
+        SONAR_SCANNER_OPTS: -Dsonar.sources=. -Dsonar.tests=tests -Dsonar.exclusions=tests/** -Dsonar.python.coverage.reportPaths=coverage.xml -Dsonar.sourceEncoding=UTF-8 -Dsonar.organization=albertus82-github -Dsonar.projectKey=io.github.albertus82:jar-classes-version-detector
